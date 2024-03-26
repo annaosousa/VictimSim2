@@ -26,14 +26,14 @@ def main(data_folder_name):
     # Instantiate agents rescuer and explorer
     resc_list = []
 
-    # resc1 = Rescuer(env, rescuer_file)
-    # resc_list.append(resc1)
-    # resc2 = Rescuer(env, rescuer_file)
-    # resc_list.append(resc2)
-    # resc3 = Rescuer(env, rescuer_file)
-    # resc_list.append(resc3)
-    # resc4 = Rescuer(env, rescuer_file)
-    # resc_list.append(resc4)
+     resc1 = Rescuer(env, rescuer_file)
+     resc_list.append(resc1)
+     resc2 = Rescuer(env, rescuer_file)
+     resc_list.append(resc2)
+     resc3 = Rescuer(env, rescuer_file)
+     resc_list.append(resc3)
+     resc4 = Rescuer(env, rescuer_file)
+     resc_list.append(resc4)
     resc_manager = RescuerManager(env, rescuer_file)
 
     # Explorer needs to know rescuer to send the map

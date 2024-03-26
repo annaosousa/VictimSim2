@@ -11,10 +11,15 @@ from abstract_agent import AbstAgent
 from physical_agent import PhysAgent
 from constants import VS
 from abc import ABC, abstractmethod
+import time
 
 
 # Classe que define o Agente Rescuer com um plano fixo
 class Rescuer(AbstAgent):
+
+    cluster_flag = False
+    rescuers_known_victims = []
+
     def __init__(self, env, config_file):
         """ 
         @param env: a reference to an instance of the environment class
@@ -42,6 +47,9 @@ class Rescuer(AbstAgent):
 
     def receive_map(self, map):
         self.known_map = map
+        
+    def set_group(self, group):
+        self.known_victims = group[1]
 
     def go_save_victims(self, map, victims):
         # """ The explorer sends the map containing the walls and
@@ -89,7 +97,7 @@ class Rescuer(AbstAgent):
         # planning
         self.__planner()
 
-    def __depth_search(self, actions_res):
+    """def __depth_search(self, actions_res):
         enough_time = True
         print(f"\n{self.NAME} actions results: {actions_res}")
         for i, ar in enumerate(actions_res):
@@ -166,7 +174,7 @@ class Rescuer(AbstAgent):
             else:
                 return
 
-        return
+        return"""
 
     def __planner(self):
         """ A private method that calculates the walk actions in a OFF-LINE MANNER to rescue the
@@ -206,34 +214,13 @@ class Rescuer(AbstAgent):
         @return True: there's one or more actions to do
         @return False: there's no more action to do """
 
+        if not Rescuer.cluster_flag:
+            return True
+    
         # No more actions to do
         if self.plan == []:  # empty list, no more actions to do
             input(f"{self.NAME} has finished the plan [ENTER]")
             return False
-
-        # Takes the first action of the plan (walk action) and removes it from the plan
-        dx, dy, there_is_vict = self.plan.pop(0)
-        print(f"{self.NAME} pop dx: {dx} dy: {dy} vict: {there_is_vict}")
-
-        # Walk - just one step per deliberation
-        walked = self.walk(dx, dy)
-
-        # Rescue the victim at the current position
-        if walked == VS.EXECUTED:
-            self.x += dx
-            self.y += dy
-            print(f"{self.NAME} Walk ok - Rescuer at position ({self.x}, {self.y})")
-            # check if there is a victim at the current position
-            if there_is_vict:
-                rescued = self.first_aid()  # True when rescued
-                if rescued:
-                    print(f"{self.NAME} Victim rescued at ({self.x}, {self.y})")
-                else:
-                    print(
-                        f"{self.NAME} Plan fail - victim not found at ({self.x}, {self.x})")
-        else:
-            print(
-                f"{self.NAME} Plan fail - walk error - agent at ({self.x}, {self.x})")
 
         # input(f"{self.NAME} remaining time: {self.get_rtime()} Tecle enter")
         return True

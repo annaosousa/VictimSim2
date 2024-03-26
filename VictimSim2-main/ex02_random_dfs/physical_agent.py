@@ -12,6 +12,7 @@ It MUST NOT be used by the rescuer or explorer """
 
 
 class PhysAgent:
+    
     def __init__(self, mind, env, x_base, y_base, state=VS.ACTIVE):
         """Instatiates a physical agent
         @param self: the physical agent
