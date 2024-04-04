@@ -433,11 +433,11 @@ class Env:
             print(f"{body.mind.TLIM - body._rtime:.2f} of {body.mind.TLIM:.2f}")
 
             # Found victims
-            found = body.get_found_victims()
+            found = body._get_found_victims()
             self.__print_victims(found, "found", "e", ident=5)
 
             # Saved victims
-            saved = body.get_saved_victims()
+            saved = body._get_saved_victims()
             self.__print_victims(saved, "saved", "s", ident=5)
 
     def print_acum_results(self):

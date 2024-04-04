@@ -26,7 +26,7 @@ class RescuerManager(Rescuer):
 
         return True
 
-    def rescues_finished(self):
+    def rescuers_finished(self):
         # Verifica se todos os resgatadores estão inativos
         return all(rescuer.get_state() != 'ATIVE' for rescuer in self.rescuers)
 
@@ -98,15 +98,15 @@ class RescuerManager(Rescuer):
             else:
                 return True
             
-        """# No more actions to do
+        # No more actions to do
         if self.plan == []:  # empty list, no more actions to do
             if self.rescuers_finished():
-                self.write_saved_victims_csv()
+                #self.write_saved_victims_csv()
                 return False
             else:
                 return True
 
-        # Takes the first action of the plan (walk action) and removes it from the plan
+        """# Takes the first action of the plan (walk action) and removes it from the plan
         dx, dy = self.plan.pop(0)
 
         # Walk - just one step per deliberation
