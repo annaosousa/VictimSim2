@@ -68,32 +68,6 @@ class Explorer(AbstAgent):
         # Define a pilha de posições visitadas
         self.position_stack = []
 
-    def explore_with_backtracking(self, x, y, position_stack):
-        """ Recursively explores the map with backtracking from position (x, y). """
-        # Marca a posição como visitada
-        self.map.mark_position_as_known(x, y)
-        self.visited_position.add((x, y))
-
-        # Define as direções possíveis (cima, baixo, esquerda, direita)
-        directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
-        # Embaralha as direções para explorar aleatoriamente
-        random.shuffle(directions)
-
-        # Explora recursivamente em cada direção
-        for dx, dy in directions:
-            next_x, next_y = x + dx, y + dy
-            if self.explore_with_backtracking(next_x, next_y, position_stack):
-                return True  # Indica que houve exploração nesta direção
-
-        # Se não houver direções possíveis, volta para a última posição visitada com direções não exploradas
-        while position_stack:
-            last_x, last_y = position_stack.pop()
-            if (last_x, last_y) in self.visited_position:
-                continue  # Já visitou essa posição, passa para a próxima
-            return self.explore_with_backtracking(last_x, last_y, position_stack)
-
-        return False  # Indica que não houve exploração nesta direção e não há posições para voltar
-
     def get_next_position(self, direction):
         """ Gets the next position that can be explored (no wall and inside the grid). """
         # Verifica as direções possíveis para se mover a partir da posição atual
@@ -231,23 +205,17 @@ class Explorer(AbstAgent):
             return self.COST_DIAG
         return None
 
-    def come_back(self):
-        base_position = (0, 0)
-        path = self.astar(self.map, (self.x, self.y), base_position)
-        print(path)
-        if path is not None:
-            print("Iniciando retorno")
-            for position in path:
-                dx = position[0] - self.x
-                dy = position[1] - self.y
-                self.walk(dx, dy)
-                self.x += dx
-                self.y += dy
-                print(f"Agente movido para posição: ({self.x}, {
-                      self.y}) Tempo: {self.get_rtime()}")
-
+    def come_back(self, position):
+        print(position)
+        if position is not None:
+            dx = position[0] - self.x
+            dy = position[1] - self.y
+            self.x += dx
+            self.y += dy
+            self.walk(dx, dy)
+            print(f"Agente movido para posição: ({self.x}, {
+                self.y}) Tempo: {self.get_rtime()}")
             if (self.at_base()):
-                self.position_stack = []
                 print(f"Agente na Base")
                 return
         else:
@@ -326,6 +294,11 @@ class Explorer(AbstAgent):
                 # self.resc.go_save_victims(self.map, self.victims)
             return False
         else:
+            base_position = (0, 0)
+            if not self.path:
+                self.path = self.astar(
+                    self.map, (self.x, self.y), base_position)
+                print(f"""caminho encontrado {self.path}""")
             self.come_back()
             return True
 
